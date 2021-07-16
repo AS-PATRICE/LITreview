@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/run/media/simo/WEB/Formation OC/VScode/P9_Simo_Patrice/LITReview/env"
+VIRTUAL_ENV="/run/media/simo/WEB/Formation OC/VScode/P9_Simo_Patrice/LITReviews/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

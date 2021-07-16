@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
-from .models import Ticket
+from ticket.models import Ticket
 # Create your models here.
 
 class Review(models.Model):

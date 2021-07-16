@@ -29,7 +29,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/run/media/simo/WEB/Formation OC/VScode/P9_Simo_Patrice/LITReview/env"
+set -gx VIRTUAL_ENV "/run/media/simo/WEB/Formation OC/VScode/P9_Simo_Patrice/LITReviews/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

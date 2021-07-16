@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'review',
     'flux',
     'ticket',
-    'userFollows',
+    'follows',
+    'compte',
 ]
 
 MIDDLEWARE = [
@@ -122,7 +123,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# AUTH_USER_MODEL = 'kye.User'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 MEDIA_URL = '/images/'
 

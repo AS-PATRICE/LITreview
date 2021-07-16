@@ -19,7 +19,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('flux.urls')),
-    path('ticket', include('ticket.urls')),
-    path('review', include('review.urls')),
-    path('userFollows', include('userFollows.urls')),
+    path('compte/', include('compte.urls')),
+    path('ticket/', include('ticket.urls')),
+    path('review/', include('review.urls')),
+    path('follows/', include('follows.urls')),
+    
 ]
