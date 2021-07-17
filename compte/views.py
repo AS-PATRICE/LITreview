@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreerUtilisateur
 
+
 # Create your views here.
 
 def page_inscription(request):
@@ -18,7 +19,7 @@ def page_inscription(request):
             form.save()
             user = form.cleaned_data.get('username')
             messages.success(request, 'Compte créer avec succès pour ' + user)
-            return redirect('login')
+            return redirect('list_flux')
     context = {'form': form}
     
     return render(request, 'compte/inscription.html', context)
@@ -33,7 +34,7 @@ def page_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return redirect('list_flux')
         else:
             messages.info(request,"Utilisateur et/ou mot de passe non conforme.")
     return render(request, 'compte/login.html', context)

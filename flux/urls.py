@@ -3,5 +3,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.list_flux),   
+    path('', views.list_flux, name='list_flux'),   
 ]
