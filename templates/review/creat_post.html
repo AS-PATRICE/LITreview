@@ -1,13 +1,13 @@
 {% extends 'main.html' %}
-{% block title %}Abonnements{% endblock title %}
+{% block title %} Créer une critique {% endblock title %}
 {% block contenu %}
     
 <br>
-<h2>Gestion des abonements</h2>
+<h2> Créer une critique</h2>
 <form action="" method="POST">
     {% csrf_token %}
     {{form}}
-    <input type="submit" name="Créer">
+    <input type="submit" name="Validez">
 </form>
 
 {% endblock %}

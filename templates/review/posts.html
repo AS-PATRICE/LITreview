@@ -1,44 +1,42 @@
 {% extends 'main.html' %}
-{% block title %} Flux {% endblock title %}
+{% block title %}Posts{% endblock title %}
 {% block contenu %}
     
 <br>
-<h2>Gestion des flux</h2> <br>
+
 
 <div class="container">
     <div class="row">
         <div  class="mb-3 form-check">
-            <a class="btn btn-primary btn-sm btn-block " href="{% url 'created_ticket' %}">Demander une critique</a>
-            <a class="btn btn-primary btn-sm btn-block " href="{% url 'created_post' %}">Créer une critique</a>
-            
-    
+            <h2>Liste des Posts</h2>    
         </div><br><br>
         
     </div>
-    {%  for review in reviews%}
-        {% if review.user == request.user %}
+    {%  for post in posts%}
+        {% if post.user == request.user %}
             <div class="card" style="width: 50rem;">
                 <div class="card-body">
                     <div class="card-title mb-2 text-muted">Critique</div><hr>
                     <div class="card-title mb-2">
-                
                         <span>Vous avez publié une critique </span>
-                        <span class="float-end"> {{ review.time_created }} </span>
+                        <span class="float-end"> {{ post.time_created }} </span>
                     </div> <br>
                     <p class="card-text">Une excellente lexture et je vous recommande vivement !</p>
                 </div>
                 <div class="card" style="width: 40 rem;">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2 text-muted">Ticket - {{ review.ticket }}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Ticket - {{ post.ticket }}</h6>
                         <p class="card-text">Titre du livre/article.</p>
-                        <img src="..." class="rounded float-start" alt="Image">
+                        <img src="..." class="rounded float-start" alt="Image"><br><br>
+                        <a class="btn btn-primary btn-sm btn-block " href="{% url 'created_post' post.id %}">Modifier</a>
+                        <a class="btn btn-danger btn-sm btn-block " href="{% url 'deleted_post' pk=post.id %}">Supprimer</a>
                     </div>
                 </div>
             </div>
-        {% endif%}
+        {% endif %}
     <br>
     {% endfor %}
-    <br>
+    
     {%  for ticket in tickets%}
         {% if ticket.user == request.user %}
             <div class="card" style="width: 50rem;">
@@ -51,14 +49,13 @@
                     <div class="card-title mb-2 text-muted">{{ ticket.title }}</div>
                     <br><br>
                     <p class="card-text">{{ ticket.description }}</p> <br>
-                    <a class="btn btn-primary btn-sm btn-block " href="{% url 'answer_ticket' %}">Créer une critique</a>
-                    
+                    <a class="btn btn-primary" href="{% url 'updated_ticket' ticket.id %}">Modifier</a>
+                    <a class="btn btn-danger" href="{% url 'deleted_ticket' ticket.id %}">Supprimer</a>
                 </div>
             </div>
         {% endif %}
     <br>
     {% endfor %}
 </div>
-
 
 {% endblock %}

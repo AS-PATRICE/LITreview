@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+{% block title %} Modifier une critique {% endblock title %}
+{% block contenu %}
+    
+<br>
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="car card-body">
+            <p>Voulez vous supprimer cette critique ?</p><br><br>
+            <form action="{% url 'deleted_post' item.id %}" method="POST">
+                {% csrf_token %}
+                <a class="btn btn-warning" href="{% url 'list_review' item.id %}">Annuler</a>
+                <input class="btn btn-danger" type="submit" name="Confirmer">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

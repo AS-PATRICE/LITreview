@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'flux',
     'ticket',
     'follows',
-    'compte',
+    'account',
 ]
 
 MIDDLEWARE = [

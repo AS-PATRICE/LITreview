@@ -34,4 +34,4 @@ class Review(models.Model):
         ordering = ('-time_created',)
         
     def __str__(self):
-        return self.body
+        return self.headline
