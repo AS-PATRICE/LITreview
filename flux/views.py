@@ -1,9 +1,10 @@
 from django.shortcuts import render
-# from itertools import chain
+from itertools import chain
 from django.db.models import CharField, Value
 from django.http.response import HttpResponse
 from review.models import Review
 from ticket.models import Ticket
+from follows.models import UserFollows
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -15,19 +16,40 @@ def list_flux(request):
                'review': reviews}
     return render(request, 'flux/index.html', locals())
 
-# def feed(request):
-#     reviews = get_users_viewable_reviews(request.user)  
-#     # returns queryset of reviews
-#     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+@login_required(login_url='login')
+def review_of_followed_user(request, pk):
+    profile = UserFollows.objects.get(id=pk)
+    users = [user for user in profile.followed_user.all()]
+    reviews = []
+    qs = None
+    
+    for u in users:
+        p = UserFollows.objects.get(user=u)
+        p_review = p.post_set.all()
+        reviews.append(p_review)
+    my_review = UserFollows.profiles_posts()
+    reviews.append(my_review)
+    
+    if len(reviews)>0:
+        qs = sorted(chain(*reviews), reverse=True, key=lambda obj: obj.time_created)
+    return render(request, 'flux/index.html', {'profile':profile, 'reviews':qs})
 
-#     tickets = get_users_viewable_tickets(request.user) 
-#     # returns queryset of tickets
-#     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
-#     # combine and sort the two types of posts
-#     posts = sorted(
-#         chain(reviews, tickets), 
-#         key=lambda post: post.time_created, 
-#         reverse=True
-#     )
-#     return render(request, 'feed.html', context={'posts': posts})
+@login_required(login_url='login')
+def ticket_of_followed_user(request, pk):
+    profile = UserFollows.objects.get(id=pk)
+    users = [user for user in profile.followed_user.all()]
+    tickets = []
+    ts = None
+    
+    for u in users:
+        t = UserFollows.objects.get(user=u)
+        p_ticket = t.post_set.all()
+        tickets.append(p_ticket)
+    my_ticket = UserFollows.profiles_posts()
+    tickets.append(my_ticket)
+    
+    if len(tickets)>0:
+        ts = sorted(chain(*tickets), reverse=True, key=lambda obj: obj.Time_created)
+    return render(request, 'flux/index.html', {'tickets':ts, 'profile':profile})
+

@@ -1,8 +1,14 @@
 {% extends 'main.html' %}
-{% block title %} modifier un ticket {% endblock title %}
+{% block title %}Critique en réponse à un tichet{% endblock title %}
 {% block contenu %}
     
 <br>
-<h2> Modifier un Ticket</h2>
+<h2> Modifier un ticket</h2>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" name="Validez">
+</form>
 
 {% endblock %}

@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.page_abonnement, name='page_abonnement'),
-    # path('FollowForm', views.FollowForm, name='page_abonnement'),    
+    path('unfollow_user/<str:pk>', views.unfollow_user, name='unfollow_user'),
+    path('follow_user/<str:pk>', views.follow_user, name='follow_user'),    
 ]

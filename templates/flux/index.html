@@ -51,7 +51,7 @@
                     <div class="card-title mb-2 text-muted">{{ ticket.title }}</div>
                     <br><br>
                     <p class="card-text">{{ ticket.description }}</p> <br>
-                    <a class="btn btn-primary btn-sm btn-block " href="{% url 'answer_ticket' %}">Créer une critique</a>
+                    <a class="btn btn-primary btn-sm btn-block " href="{% url 'answer_ticket' pk=ticket.id %}">Créer une critique</a>
                     
                 </div>
             </div>

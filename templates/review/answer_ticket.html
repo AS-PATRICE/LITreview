@@ -5,4 +5,10 @@
 <br>
 <h2> Critique en réponse à un ticket</h2>
 
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" name="Validez">
+</form>
+
 {% endblock %}

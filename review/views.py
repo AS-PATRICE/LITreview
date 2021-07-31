@@ -4,6 +4,7 @@ from django.http.response import HttpResponse
 from .models import Review
 from ticket.models import Ticket
 from .forms import ReviewForm
+from ticket.forms import TicketForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -30,7 +31,15 @@ def created_post(request):
 
 
 @login_required(login_url='login')
-def answer_ticket(request):
+def answer_ticket(request, pk):
+    ticket = Ticket.objects.get(id = pk)
+    form = ReviewForm(instance=ticket)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=ticket)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context = {'form':form}
     return render(request, 'review/answer_ticket.html', locals())
 
 
@@ -44,19 +53,22 @@ def updated_post(request, pk):
             form = ReviewForm(request.POST, instance=posts)
             if form.is_valid():
                 form.save()
-                return redirect('/')
+                return redirect('list_review')
     context = {'form':form}
-    return render(request, 'review/creat_post.html', locals())
+    return render(request, 'review/update_post.html', locals())
 
 
 @login_required(login_url='login')
 def deleted_post(request, pk):
     post = Review.objects.get(id=pk)
+    
     if post.user == request.user:
-        if request.method=='POST':
-            post.delete()
-            return redirect('/')
-    context = {'item':post}
-    return render(request, 'review/delete_post.html', locals())
+        # if request.method=='POST':
+        #     ticket.delete()
+        post.delete()        
+    return redirect('/')
+    
+    # context = {'item':post}
+    # return render(request, 'review/delete_post.html', locals())
 
 

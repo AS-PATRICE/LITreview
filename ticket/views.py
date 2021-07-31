@@ -29,12 +29,12 @@ def updated_ticket(request, pk):
         if request.method == 'POST':
             form = TicketForm(request.POST, instance=ticket)
             if form.is_valid():
-                form = form.save(commit=False)
-                form.user = request.user
-                form.save()
+                form_ticket = form.save(commit=False)
+                form_ticket.user = request.user
+                form_ticket.save()
                 return redirect('/')
     context = {'form':form}
-    return render(request, 'ticket/creat_ticket.html', locals())
+    return render(request, 'ticket/update_ticket.html', locals())
 
 
 @login_required(login_url='login')

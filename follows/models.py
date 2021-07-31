@@ -15,10 +15,14 @@ class UserFollows(models.Model):
                                related_name='followed_by')
     
     
-    class Meta:
-        # ensures we don't get multiple UserFollows instances
-        # for unique user-user_followed pairs
-        unique_together = ('user', 'followed_user',)
+    def profiles_posts(self):
+        return self.post_set.all()
+    
+    # class Meta:
+    #     # ensures we don't get multiple UserFollows instances
+    #     # for unique user-user_followed pairs
+    #     unique_together = ('user', 'followed_user',)
+        
     
     def __str__(self):
-        return '{0}  follow  {1}'.format(self.user, self.followed_user)
+        return str(self.user.username)
