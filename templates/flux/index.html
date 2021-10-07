@@ -8,56 +8,64 @@
 <div class="container">
     <div class="row">
         <div  class="mb-3 form-check">
-            <a class="btn btn-primary btn-sm btn-block " href="{% url 'created_ticket' %}">Demander une critique</a>
-            <a class="btn btn-primary btn-sm btn-block " href="{% url 'created_post' %}">Créer une critique</a>
-            
-    
-        </div><br><br>
-        
+            <a class="btn btn-primary btn-sm btn-block " href="{% url 'create_ticket' %}">Demander une critique</a>
+            <a class="btn btn-primary btn-sm btn-block " href="{% url 'create_review' %}">Créer une critique</a>
+        </div><br>  
     </div>
-    {%  for review in reviews%}
-        {% if review.user == request.user %}
-            <div class="card" style="width: 50rem;">
-                <div class="card-body">
-                    <div class="card-title mb-2 text-muted">Critique</div><hr>
-                    <div class="card-title mb-2">
-                
-                        <span>Vous avez publié une critique </span>
-                        <span class="float-end"> {{ review.time_created }} </span>
-                    </div> <br>
-                    <p class="card-text">Une excellente lexture et je vous recommande vivement !</p>
-                </div>
-                <div class="card" style="width: 40 rem;">
-                    <div class="card-body">
-                        <h6 class="card-subtitle mb-2 text-muted">Ticket - {{ review.ticket }}</h6>
-                        <p class="card-text">Titre du livre/article.</p>
-                        <img src="..." class="rounded float-start" alt="Image">
+    <div class="posts-segment">
+        {% for post in posts %}
+
+                {% if post.content_type == 'REVIEW' %}
+                    <div class="row m-5">
+                        <div class="col-md-8 ">
+                            {% if post.user == request.user %}
+                                <p>Vous avez crée un ticket.</p>
+                            {% else %}
+                                <p>Ticket crée par {{ post.user }}</p>
+                            {% endif %}
+
+                            <p>Titre : {{ post.title }}</p>
+                            <p>Commentaire  {{ post.description }}</p>
+                            <p>Publié le : {{ post.time_created }}</p>
+                            <p><img src="{{ post.image.url }}" style="height: 300px; height:300px"></p>
+                        
+                        </div>
+                        
+                        
+                        <div  class="mb-3 form-check">
+                            <a class="btn btn-primary btn-sm btn-block " href="{% url 'update_ticket' post.id %}">Modifier</a>
+                            <a class="btn btn-primary btn-sm btn-block " href="{% url 'delete_ticket' post.id %}">supprimer</a>
+                        </div><br>
+                        
                     </div>
-                </div>
-            </div>
-    {% endif%}
-    <br>
-    {% endfor %}
-    <br>
-    {%  for ticket in tickets%}
-        {% if ticket.user == request.user %}
-            <div class="card" style="width: 50rem;">
-                <div class="card-body">
-                    <div class="card-title mb-2 text-muted">Ticket</div><hr>
-                    <div class="card-title mb-2">
-                        <span>{{ ticket.user }} a demandé un ticket    </span>
-                        <span class="float-end">{{ ticket.Time_created }} </span>
-                    </div> <br><br>
-                    <div class="card-title mb-2 text-muted">{{ ticket.title }}</div>
-                    <br><br>
-                    <p class="card-text">{{ ticket.description }}</p> <br>
-                    <a class="btn btn-primary btn-sm btn-block " href="{% url 'answer_ticket' pk=ticket.id %}">Créer une critique</a>
+                    
+                {% elif post.content_type == 'TICKET' %}
+                <div class="row">
+                    <h3>REVIEW</h3>
+                    {% if post.user == request.user %}
+                        <p>Vous avez écrit une review.</p>
+                    {% else %}
+                        <p>Review écrite par {{ post.user }}</p>
+                    {% endif %}
+                    <p>publié le  {{ post.time_created }}</p>
+                    <p>Note : {{ post.rating }}</p><br>
+                    <p>Titre : {{ post.headline }} </p>
+                    <p>Commentaire <br> {{ post.body }}</p>
+                   
+                        <div  class="mb-3 form-check">
+                            <a class="btn btn-primary btn-sm btn-block " href="{% url 'update_review' post.id %}">Modifier</a>
+                            <a class="btn btn-primary btn-sm btn-block " href="{% url 'delete_review' post.id %}">supprimer</a>
+                        </div><br>
                     
                 </div>
-            </div>
-        {% endif %}
-    <br>
-    {% endfor %}
+                
+                {% endif %}
+               
+            {% empty %}
+                <p class="headline">Vous n'avez ni ticket et ni critique pour le moment</p>
+            {% endfor %}
+    </div>
+
 </div>
 
 

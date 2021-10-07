@@ -1,12 +1,11 @@
 from django.contrib import admin
 from django.urls import path
-from . import views
+from .import views
 
 urlpatterns = [
-    path('', views.list_review, name='list_review'),
-    path('created_post/', views.created_post, name='created_post'),
-    path('answer_ticket/<str:pk>', views.answer_ticket, name='answer_ticket'),
-    path('updated_post/<str:pk>', views.updated_post, name='created_post'),
-    path('deleted_post/<str:pk>', views.deleted_post, name='deleted_post'),
-    
+    path('', views.list_posts, name='list_posts'),
+    path('update_review/<int:update_pk_review>', views.update_review, name='update_review'),
+    path('delete_review/<int:delete_pk_review>', views.delete_review, name='delete_review'),
+    path('update_ticket/<int:update_pk_ticket>', views.update_ticket, name='update_ticket'),
+    path('delete_ticket/<int:delete_pk_ticket>', views.delete_ticket, name='delete_ticket'),
 ]

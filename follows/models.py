@@ -15,9 +15,6 @@ class UserFollows(models.Model):
                                related_name='followed_by')
     
     
-    def profiles_posts(self):
-        return self.post_set.all()
-    
     class Meta:
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
@@ -25,4 +22,4 @@ class UserFollows(models.Model):
         
     
     def __str__(self):
-        return str(self.user.username)
+        return f'{self.user.username}, {self.followed_user.username}'

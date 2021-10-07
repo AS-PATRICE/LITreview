@@ -15,7 +15,7 @@ class Ticket(models.Model):
                              on_delete=models.CASCADE)
     image = models.ImageField(null=True,
                               blank=True)
-    Time_created = models.DateField(auto_now_add=True)
+    time_created = models.DateTimeField(auto_now_add=True)
     
     
     
@@ -23,4 +23,4 @@ class Ticket(models.Model):
         return self.title
 
     class Meta:
-        ordering = ('-Time_created',)
+        ordering = ('-time_created',)

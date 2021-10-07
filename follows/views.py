@@ -1,46 +1,50 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http.response import HttpResponse
 from follows.models import UserFollows
+from follows.forms import FollowForm
+from review.models import Review
+from ticket.models import Ticket
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+
 @login_required(login_url='login')
 def page_abonnement(request):
-    followers = UserFollows.objects.all() #.exclude(request.user)
-    context = {'followers': followers}
+    followers = UserFollows.objects.filter(user=request.user) # Les utilisateurs qui followent l'utilisateur connecté
+    followings = UserFollows.objects.filter(followed_user=request.user) # Les utilisateurs qui sont follow par l'utilisateur connecté
+    context = {'followers': followers,
+               'followings': followings}
     return render(request, 'follows/subscription.html', locals())
 
 
 @login_required(login_url='login')
-def follow_user(request, pk):
-    if request.method=="POST":# Condition si validation du formulaire
-        my_profile = UserFollows.objects.get(user=request.user)# Je fais appel à mon profile
-        pk = request.POST.get('profile_pk') # recherche de l'identifiant de l'utilisateur à 
-        follow = UserFollows.objects.get(pk=pk)# obtension de la clée primaire de l'utilisateur
+def find_user(request):
+    if request.method == "POST":
+        query = request.POST.get("user_id")
         
-        if follow.user in my_profile.followed_user.all():# Voire si je suis l'utilisateur
-            my_profile.followed_user.add(follow.user)# 
-        else:
-            my_profile.followed_user.remove(follow.user) # Si oui, je le supprime
-            return redirect('page_abonnement')
+        try:
+           following_user = User.objects.get(pk=query)
+           UserFollows.objects.create(user=request.user, followed_user=following_user)
+        except Exception as e:
+            pass
+            
+        return redirect('page_abonnement')
         
-        
-    
 
-# @login_required(login_url='login')
-# def unfollow_user(request, pk):
-#     if request.method =="POST":
-#         my_profile = UserFollows.objects.get(user=request.user)# Mon profile
-#         pk = request.POST.get('profile_pk') # recherche de l'identifiant de l'utilisateur à 
-#         follow = UserFollows.objects.get(pk=pk) 
+@login_required(login_url='login')
+def follow_user(request, user):
+    selected_user = User.objects.get(username=user)
+    new_following = UserFollows(user=selected_user, followed_user=request.user)
+    new_following.save()
+    return redirect('page_abonnement')
         
-#         if follow.user in my_profile.followed_user.all():# Voire si je suis l'utilisateur
-#             my_profile.followed_user.remove(follow.user) # Si oui, je le supprime
-#             return redirect('page_abonnement')
+
+@login_required(login_url='login')
+def unfollow_user(request, follow_id):
+    following = UserFollows.objects.filter(followed_user=follow_id, user=request.user)
+    following.delete()
+    return redirect('page_abonnement')
 
 
-
-
-        
-        
 

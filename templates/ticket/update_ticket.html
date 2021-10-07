@@ -4,11 +4,27 @@
     
 <br>
 <h2> Modifier un ticket</h2>
-
-<form action="" method="POST">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{form}}
-    <input type="submit" name="Validez">
+    <div>
+        <div>
+            <h5>Titre</h5>
+            <div style="border: 1px solid black; margin-left: 50px; width: 1200px">
+                <h5 style="text-align: left">{{ form_update.title }}</h5>
+            </div>
+            <h5>Description</h5>
+            <div style="border: 1px solid black; margin-left: 50px; width: 1200px">
+                {{ form_update.description }}
+            </div>
+            <br>
+            <img src="{{ MEDIA_URL }}{{ticket.images}}" widht="200px" height="200px"><br>
+            {{ form_update.image }}
+            {{ form_update.user.as_hidden }}
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-primary">Envoyer</button>
+    </div>
 </form>
 
 {% endblock %}

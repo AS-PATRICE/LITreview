@@ -1,0 +1,141 @@
+<!-- <br>
+        <h4>Suivre d'autres utilisateurs</h4><br>
+
+        <div class="col-md-6">
+            <div class="card card-body">
+                <div class="row">
+                    <form class="row g-3" method="GET">
+                        {% csrf_token %}
+                        <div class="col-auto">
+                            {{followers.followed_user}}
+                            <input type="text"  name="user_name" class="form-control"  placeholder="Veillez saisir le nom de l'utilisateur à suivre">
+                        </div>
+                        <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-3">Envoyer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- <form class="form-inline" action="{% url 'abonnement' %}" method=POST>
+                    {% csrf_token %}
+                    <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Preference</label>
+                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                        <option selected>Choisir un utilisateur</option>
+                        {% for follower in followers %}
+                            <option value="{{ follower.id }}">{{ follower.username }}</option>
+                        {% endfor %}
+                    </select>                  
+                    <button type="submit" class="btn btn-primary my-1">Valider</button>
+                </form> -->
+
+
+
+                 <!-- <h5>Abonnements</h5>
+        {% if followings.exists %}
+            <table class="user-follows" id="following">
+                 {% for following in followings %}
+                    <tr>
+                         <td>{{ following.user }}</td>			
+                        <td class="td-button">
+                            <input type="hidden" >
+                            <a class="btn btn-primary  btn-sm btn-block" type="submit" ></a>Se désabonner</a>
+                        </td>
+                    </tr>
+                 {% endfor %}
+                 </table>
+            {% else %}
+                 <p>Vous ne suivez personne pour le moment</p>
+            {% endif %}
+         -->
+        
+        <!-- <h5>Abonnés</h5>
+        {% if followers.exists %}
+            <table class="user-follows" id="follower">
+                {% for follower in followers %}
+                    <tr>
+                        <td>{{ follower.followed_user }}</td>
+                    </tr>
+                 {% endfor %}
+                 </table>
+             {% else %}
+                 <p>Vous n'avez pas encore d'abonnés</p>
+             {% endif %}
+        
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <h5>Abonnements:</h5>
+                <div class="card card-body">
+                    <table class="table table-sm">
+                        <form class="row g-3" action="" method="POST">
+                            {% csrf_token %}
+                        <tr>
+                            <th>Nom de l'abonné</th>
+                            <th>Se désabonner</th>
+                        </tr>
+                        {% for follower in followers %}
+                        <tr>
+                            <th>{{follower.followed_user}}</th>
+                            <th>
+                                    <input type="hidden" >
+                                    <a class="btn btn-primary  btn-sm btn-block" type="submit" href="{% url 'unfollow_user' pk=follower.followed_user.id %} ">Se désabonner</a>
+                        </tr>
+                        {% endfor %}
+                        </form>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <h4>Abonnés</h4><br><br> -->
+        <!-- J'envisage d'afficher ici la liste des utilisateurs qui me suivent -->
+
+    </div>
+    {%  for post in posts %}
+        {% if post.user == request.user %}
+            <div class="card" style="width: 50rem;">
+                <div class="card-body">
+                    <div class="card-title mb-2 text-muted">Critique</div><hr>
+                    <div class="card-title mb-2">
+                        <span>Vous avez publié une critique </span>
+                        <span class="float-end"> {{ post.time_created }} </span>
+                    </div> <br>
+                    <p class="card-text">Une excellente lexture et je vous recommande vivement !</p>
+                </div>
+                <div class="card" style="width: 40 rem;">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Ticket - {{ post.ticket }}</h6>
+                        <p class="card-text">Titre du livre/article.</p>
+                        <img src="..." class="rounded float-start" alt="Image"><br><br>
+                        <a class="btn btn-primary btn-sm btn-block " href="{% url 'created_post' pk=post.id %}">Modifier</a>
+                        <a class="btn btn-danger btn-sm btn-block " href="{% url 'deleted_post' pk=post.id %}">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% endif %}
+    {% endfor %}
+    
+    {%  for ticket in tickets%}
+        {% if ticket.user == request.user %}
+            <div class="card" style="width: 50rem;">
+                <div class="card-body">
+                    <div class="card-title mb-2 text-muted">Ticket</div><hr>
+                    <div class="card-title mb-2">
+                        <span>{{ ticket.user }} a demandé un ticket    </span>
+                        <span class="float-end">{{ ticket.Time_created }} </span>
+                    </div> <br><br>
+                    <div class="card-title mb-2 text-muted">{{ ticket.title }}</div>
+                    <br><br>
+                    <p class="card-text">{{ ticket.description }}</p> <br>
+                    <a class="btn btn-primary" href="{% url 'updated_ticket' ticket.id %}">Modifier</a>
+                    <a class="btn btn-danger" href="{% url 'deleted_ticket' ticket.id %}">Supprimer</a>
+                </div>
+            </div>
+            <br>
+        {% endif %}
+    {% endfor %}
+    <br>
+</div>

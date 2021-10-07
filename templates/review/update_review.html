@@ -1,0 +1,32 @@
+{% extends 'main.html' %}
+{% block title %}Critique en réponse à un tichet{% endblock title %}
+{% block contenu %}
+    
+<br>
+<h2> Modifier une critique</h2>
+<h4 style="text-align: center">Modifier votre critique</h4>
+<div style="border: 2px solid black; margin: 20px">
+    <div>
+        <h5>Vous êtes en train de poster en réponse à:</h5>
+        <div style="border: 2px solid black; margin: 30px">
+            {{ ticket.user }} a demandé une critique<br>
+            {{ ticket.title }}<br>
+            {{ ticket.description }}<br>
+            <img src="{{ MEDIA_URL }}{{ticket.image}}" widht="200px" height="200px"><br>
+        </div>
+    </div>
+    <br><hr><br>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <div>
+                Titre: {{ form_update.headline }}<br>
+                Commentaire: {{ form_update.body }}<br>
+                Note: {{ form_update.rating }}<br>
+                {{ form_update.ticket.as_hidden }}
+            </div>
+            <button>Envoyer</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

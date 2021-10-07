@@ -1,63 +1,59 @@
 {% extends 'main.html' %}
 {% block title %}Abonnements{% endblock title %}
 {% block contenu %}
-    
 
 
 <div class="container">
     <div class="row">
         <br>
-        <h4>Suivre d'autres utilisateurs</h4><br>
-
-        <div class="col-md-6">
-            <div class="card card-body">
-                <div class="row">
-                    <form class="row g-3" action="{% url 'follow_user' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="col-auto">
-                            {{followers.followed_user}}
-                            <input type="text"  name="profile_pk" class="form-control"  placeholder="Veillez saisir le nom de l'utilisateur à suivre">
-                        </div>
-                        <div class="col-auto">
-                        <button type="submit" class="btn btn-primary mb-3">Envoyer</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    
-
         <br>
 
-        <div class="row">
-            <div class="col-md-5">
-                <h5>Abonnements:</h5>
-                <div class="card card-body">
-                    <table class="table table-sm">
-                        <form class="row g-3" action="{% url 'follow_user' %} " method="POST">
-                            {% csrf_token %}
-                        <tr>
-                            <th>Nom de l'abonné</th>
-                            <th>Se désabonner</th>
-                        </tr>
-                        {% for follower in followers %}
-                        <tr>
-                            <th>{{follower.followed_user}}</th>
-                            <th>
-                                <input type="hidden" name="profile_pk" value="{{follow.pk}}">
-                                <button class="btn btn-primary  btn-sm btn-block" type="submit"></button>
-                        </tr>
-                        {% endfor %}
-                        </form>
-                    </table>
+        <div class="subscribe-segment">
+            <h4>Suivre d'autres utilisateurs</h4>
+            <div class="search-container">
+                <form method="post" action="{% url 'find_user' %}">
+                    {% csrf_token %}
+                    <div class="col">
+                        <select class="form-select" name="user_id" >
+                            <option value="" selected>Sélectionnez un utilisateur</option>
+                            {% for following in followings %}
+                                <option value="{{ following.id }}">{{ following.user}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input_right input_right-right">
+                        <input class=" btn btn-success" type="submit" value="Envoyer"/>
+                    </div>
+                </form>
+                
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card card-body">
+                        <table class="table table-sm">
+                            <form class="row g-3" action="" method="POST">
+                                {% csrf_token %}
+                            <tr>
+                                <th>Nom de l'abonné</th>
+                                <th>Se désabonner</th>
+                            </tr>
+                            {% for follower in followers %}
+                            <tr>
+                                <th>{{follower.followed_user}}</th>
+                                <th>
+                                        <input type="hidden" >
+                                        <a class="btn btn-primary  btn-sm btn-block" type="submit" href="{% url 'unfollow_user' follower.followed_user.id %} ">Se désabonner</a>
+                            </tr>
+                            {% endfor %}
+                            </form>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <h4>Abonnés</h4><br><br>
-        <!-- J'envisage d'afficher ici la liste des utilisateurs qui me suivent -->
+       
     </div>
-</div>
+</div> 
 
 
 {% endblock %}

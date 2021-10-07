@@ -1,0 +1,36 @@
+{% extends 'main.html' %}
+{% block title %}Résultats recherches{% endblock title %}
+{% block contenu %}
+
+
+<div class="container">
+    <div class="row">
+        {% if requested_data %}
+	<table class="">
+		<tr>
+			<th>utilisateur</th>
+			<th>statut</th>
+		</tr>
+		{% for user in requested_data %}
+			<tr>
+	 			<td class="users">{{ user.0 }}</td>
+	 			{% if user.1 %}
+	 			<td class="following-exist"><p>abonné</p></td>
+	 			{% else %}
+				<td class="td-button"><input type="hidden">
+                    <a class="btn btn-primary  btn-sm btn-block" type="submit" href="{% url 'follow_user' user.0  %} ">S'abonner</a>
+                </td>
+				
+                {% endif %}
+			</tr>
+	 	{% endfor %}
+	 </table>
+	{% else %}
+		<p>{{ message }}</p>
+	{% endif %}
+
+</div>
+</div> 
+
+
+{% endblock %}

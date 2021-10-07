@@ -10,18 +10,15 @@ from .forms import CreateUser
 # Create your views here.
 
 def page_inscription(request):
-    
     form = CreateUser()
-    
     if request.method == 'POST':
         form = CreateUser(request.POST)
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get('username')
             messages.success(request, 'Compte créer avec succès pour ' + user)
-            return redirect('list_flux')
+            return redirect('feeds')
     context = {'form': form}
-    
     return render(request, 'account/inscription.html', context)
 
 
@@ -34,7 +31,7 @@ def page_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('list_flux')
+            return redirect('feeds')
         else:
             messages.info(request,"Utilisateur et/ou mot de passe non conforme.")
     return render(request, 'account/login.html', context)

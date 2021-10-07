@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'review',
-    'flux',
-    'ticket',
-    'follows',
-    'account',
+    'django.contrib.review',
+    'django.contrib.flux',
+    'django.contrib.ticket',
+    'django.contrib.follows',
+    'django.contrib.account',
 ]
 
 MIDDLEWARE = [

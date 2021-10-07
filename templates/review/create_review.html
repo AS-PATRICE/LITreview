@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+{% block title %} Créer une critique {% endblock title %}
+{% block contenu %}
+    
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div style="border: 2px solid black; margin: 20px">
+                <h4 style="text-align: center">Créer une critique</h4>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        {% if ticket %}
+                            <div>
+                                <div>
+                                    <h2>Ticket</h2>
+                                    <hr>
+                                    <br>
+                                    <h4>Titre</h4>
+                                    {{ form_ticket.title }}
+                                    <h5>Description</h5>
+                                    {{ form_ticket.description }}
+                                    <br>
+                                    {% if ticket.image %}
+                                    <p><img src="{{ form_ticket.image }}" style="height: 300px; height:300px"></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+
+                        {% endif %}
+                    
+                    <h2>Critique</h2>
+                    <div>
+                        <h5>Titre </h5>{{ ticket_form.title }}<br>
+                        <h5>Description </h5>{{ ticket_form.description }}<br>
+                        <h5>Image </h5>{{ ticket_form.image }}<br>
+                        {% for error in ticket_form.errors %}
+                            <p>{{ error }} n'est pas valide.</p>
+                        {% endfor %}
+                        <h5>Note </h5>{{ review_form.rating }}<br>
+                        <h5>Titre </h5>{{ review_form.headline }}<br>
+                        <h5>Commentaire </h5>{{ review_form.body }}<br>
+                        {% for error in review_form.errors %}
+                            <p>{{ error }} n'est pas valide.</p>
+                        {% endfor %}
+                        
+                    </div>
+                    <button class="btn btn-primary">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,61 +1,101 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from itertools import chain
-from django.db.models import CharField, Value
+from django.db.models import CharField, Value, Q
 from django.http.response import HttpResponse
 from review.models import Review
+from review.forms import ReviewForm
 from ticket.models import Ticket
+from ticket.forms import TicketForm
 from follows.models import UserFollows
 from django.contrib.auth.decorators import login_required
 
-
-
 # Create your views here.
+    
 @login_required(login_url='login')
 def list_flux(request):
-    tickets = Ticket.objects.all()
-    reviews = Review.objects.all()
-    context = {'ticket': tickets,
-               'review': reviews}
-    return render(request, 'flux/index.html', locals())
-
-@login_required(login_url='login')
-def review_of_followed_user(request):
-    profile = UserFollows.objects.filter(user=request.user)# ici j'ai remplacé get() par filter. 
-    reviews = []
-    qs = None
-    for u in profile:
-        p = UserFollows.objects.get(user=u)
-        p_review = p.post_set.all()
-        reviews.append(p_review)
-    my_review = UserFollows.profiles_posts()
-    reviews.append(my_review)
     
-    if len(reviews)>0:
-        qs = sorted(chain(*reviews), reverse=True, key=lambda obj: obj.time_created)
-    return render(request, 'flux/index.html', {'profile':profile, 'reviews':qs})
+    users = []
+    user_follows = UserFollows.objects.filter(user=request.user)
+    for user_follow in user_follows:
+        users.append(user_follow.followed_user)
+    users.append(request.user)
+    
+    
+    # Complex lookups with Q objects
+    reviews = Review.objects.filter(Q(user__in=users))
+    reviews = reviews.annotate(content_type=('REVIEW', CharField()))
+    
+    
+    ticket_with_review = []
+    for review in reviews:
+        ticket_with_review.append(review.ticket)
+        
+    tickets = Ticket.objects.filter(Q(user__in=users))
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+        
+    posts = sorted(chain(tickets, reviews), key=lambda post: post.time_created, reverse=True)   
+    
+    context = {'posts': posts}
+    
+    return render(request, 'flux/index.html', context)
+ 
 
+@login_required(login_url='login')
+def create_review(request):
+    """create review"""
+    form_ticket = TicketForm()
+    form_review = ReviewForm()
+    if request.method == 'POST':
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+        if ticket_form.is_valid() and review_form.is_valid():
+            set_ticket = ticket_form.save(commit=False)
+            set_ticket.user = request.user
+            
+            set_review = review_form.save(commit=False)
+            set_review.ticket = set_ticket
+            set_review.user = request.user
+            
+            set_ticket.save()
+            set_review.save()
+            return redirect('list_flux')
+    context = {'ticket_form': form_ticket,
+                'review_form': form_review}
+    return render(request, "review/create_review.html", context)
 
+@login_required(login_url='login')
+def create_ticket(request):
+    """create ticket"""   
+    if request.method == 'POST':
+        form_ticket = TicketForm(request.POST, request.FILES)
+        if form_ticket.is_valid():
+            ticket = form_ticket.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            return redirect('list_flux')
+        else:
+            print(form_ticket.errors.as_data())
+    else:
+        form_ticket = TicketForm()
+        context = {'form_ticket':form_ticket}
+    return render(request, 'ticket/create_ticket.html', locals())
+
+        
 
 
 @login_required(login_url='login')
-def ticket_of_followed_user(request):
-    # se connecter à mon profil d'utilisateur
-    profile = UserFollows.objects.filter(user=request.user)
-    # Vérifier qui nous suivons
-    users = [user for user in profile.followed_user.all()]
-    # initialiser une variable(un tableau)
-    tickets = []
-    ts = None
-    # Recevoir les posts des personnes que nous suivons
-    for u in users:# Pour chaque utilisateur parmis les utilisateurs
-        t = UserFollows.objects.get(user=u)# définition d'une variable t pour cet utilisateur particulier
-        p_ticket = t.post_set.all()# Envoyer un ticket à l'utilisateur
-        tickets.append(p_ticket)#J'ajoute ce ticket à la variable ticket[] déclarées plus haut
-    # Mes propores tickets
-    my_ticket = UserFollows.profiles_posts()
-    tickets.append(my_ticket)
-    # trier et chaîner les ensembles de requêtes et décompresser la liste des publications
-    if len(tickets)>0:
-        ts = sorted(chain(*tickets), reverse=True, key=lambda obj: obj.Time_created)
-    return render(request, 'flux/index.html', {'tickets':ts, 'profile':profile})
-
+def answer_ticket(request, ticket_pk_answer):
+    """ answer ticket"""
+    ticket = Ticket.objects.get(id=ticket_pk_answer)
+    if request.method =='POST':
+        form_review = ReviewForm(request.POST)
+        if form_review.is_valid():
+            set_review = form_review.save(commit=False)
+            set_review.ticket = ticket[0]
+            set_review.user = request.user
+            set_review.save()
+            return redirect('/')
+        else:
+            form_review = ReviewForm()
+    context = {'form_review':form_review}
+    return render(request, "review/answer_ticket.html", context)
